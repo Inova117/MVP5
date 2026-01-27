@@ -3,8 +3,8 @@ import fs from 'fs'
 import path from 'path'
 
 export async function GET(
-    request: NextRequest,
-    { params }: { params: { dimensions: string[] } }
+    _request: NextRequest,
+    { params: _params }: { params: { dimensions: string[] } }
 ) {
     // Read the generated thumbnail image
     const imagePath = path.join(
