@@ -5,8 +5,11 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import type { UserRole } from '@/types/database'
-import { GraduationCap, User } from 'lucide-react'
+import { GraduationCap, User, Video, ArrowRight } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export default function SignupPage() {
     const router = useRouter()
@@ -35,143 +38,159 @@ export default function SignupPage() {
     }
 
     return (
-        <div className="bg-background rounded-2xl shadow-2xl border border-border p-8">
-            <div className="text-center mb-8">
-                <h1 className="text-3xl font-display font-bold text-foreground mb-2">
-                    Create Account
-                </h1>
-                <p className="text-muted-foreground">
-                    Join thousands of learners worldwide
-                </p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-                {error && (
-                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 text-sm text-red-600 dark:text-red-400">
-                        {error}
+        <div className="min-h-screen bg-background flex items-center justify-center p-4">
+            <div className="w-full max-w-lg">
+                <div className="flex flex-col items-center mb-8">
+                    <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-primary-foreground mb-4 shadow-tactile">
+                        <Video className="w-6 h-6" />
                     </div>
-                )}
-
-                <div>
-                    <label
-                        htmlFor="fullName"
-                        className="block text-sm font-medium text-foreground mb-2"
-                    >
-                        Full Name
-                    </label>
-                    <input
-                        id="fullName"
-                        type="text"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        required
-                        className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                        placeholder="John Doe"
-                    />
+                    <h1 className="text-2xl font-serif font-bold text-foreground">
+                        Join Tactile Academy
+                    </h1>
                 </div>
 
-                <div>
-                    <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-foreground mb-2"
-                    >
-                        Email Address
-                    </label>
-                    <input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                        placeholder="you@example.com"
-                    />
-                </div>
+                <Card className="shadow-tactile-lg border-primary/5">
+                    <CardHeader className="space-y-1 text-center pb-6">
+                        <CardTitle className="text-2xl font-serif">Create Account</CardTitle>
+                        <CardDescription>
+                            Join thousands of learners worldwide
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            {error && (
+                                <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 text-sm text-destructive text-center">
+                                    {error}
+                                </div>
+                            )}
 
-                <div>
-                    <label
-                        htmlFor="password"
-                        className="block text-sm font-medium text-foreground mb-2"
-                    >
-                        Password
-                    </label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        minLength={6}
-                        className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                        placeholder="••••••••"
-                    />
-                    <p className="mt-1 text-xs text-muted-foreground">
-                        At least 6 characters
-                    </p>
-                </div>
+                            <div className="space-y-3">
+                                <label className="text-sm font-medium text-foreground block ml-1">
+                                    I want to
+                                </label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => setRole('student')}
+                                        className={cn(
+                                            "p-4 rounded-xl border-2 text-left transition-all duration-300 relative overflow-hidden group",
+                                            role === 'student'
+                                                ? 'border-primary bg-primary/5 shadow-tactile-sm'
+                                                : 'border-border bg-card hover:border-primary/30 hover:bg-muted/50'
+                                        )}
+                                    >
+                                        <div className={cn(
+                                            "w-10 h-10 rounded-full flex items-center justify-center mb-3 transition-colors",
+                                            role === 'student' ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                                        )}>
+                                            <User className="w-5 h-5" />
+                                        </div>
+                                        <div className="font-serif font-bold text-foreground mb-1">Learn</div>
+                                        <div className="text-xs text-muted-foreground font-sans">Take courses and build skills</div>
+                                        {role === 'student' && (
+                                            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary" />
+                                        )}
+                                    </button>
 
-                <div>
-                    <label className="block text-sm font-medium text-foreground mb-3">
-                        I want to
-                    </label>
-                    <div className="grid grid-cols-2 gap-3">
-                        <button
-                            type="button"
-                            onClick={() => setRole('student')}
-                            className={`p-4 rounded-lg border-2 transition-all ${role === 'student'
-                                    ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
-                                    : 'border-border hover:border-primary-300'
-                                }`}
-                        >
-                            <User
-                                className={`w-8 h-8 mx-auto mb-2 ${role === 'student'
-                                        ? 'text-primary-600'
-                                        : 'text-muted-foreground'
-                                    }`}
-                            />
-                            <div className="text-sm font-medium text-foreground">
-                                Learn
+                                    <button
+                                        type="button"
+                                        onClick={() => setRole('instructor')}
+                                        className={cn(
+                                            "p-4 rounded-xl border-2 text-left transition-all duration-300 relative overflow-hidden group",
+                                            role === 'instructor'
+                                                ? 'border-primary bg-primary/5 shadow-tactile-sm'
+                                                : 'border-border bg-card hover:border-primary/30 hover:bg-muted/50'
+                                        )}
+                                    >
+                                        <div className={cn(
+                                            "w-10 h-10 rounded-full flex items-center justify-center mb-3 transition-colors",
+                                            role === 'instructor' ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                                        )}>
+                                            <GraduationCap className="w-5 h-5" />
+                                        </div>
+                                        <div className="font-serif font-bold text-foreground mb-1">Teach</div>
+                                        <div className="text-xs text-muted-foreground font-sans">Share knowledge and earn</div>
+                                        {role === 'instructor' && (
+                                            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary" />
+                                        )}
+                                    </button>
+                                </div>
                             </div>
-                            <div className="text-xs text-muted-foreground">
-                                Take courses
+
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <label
+                                        htmlFor="fullName"
+                                        className="text-sm font-medium text-foreground block ml-1"
+                                    >
+                                        Full Name
+                                    </label>
+                                    <Input
+                                        id="fullName"
+                                        type="text"
+                                        value={fullName}
+                                        onChange={(e) => setFullName(e.target.value)}
+                                        required
+                                        placeholder="John Doe"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label
+                                        htmlFor="email"
+                                        className="text-sm font-medium text-foreground block ml-1"
+                                    >
+                                        Email Address
+                                    </label>
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                        placeholder="you@example.com"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label
+                                        htmlFor="password"
+                                        className="text-sm font-medium text-foreground block ml-1"
+                                    >
+                                        Password
+                                    </label>
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                        minLength={6}
+                                        placeholder="••••••••"
+                                    />
+                                    <p className="text-xs text-muted-foreground ml-1">
+                                        Must be at least 6 characters
+                                    </p>
+                                </div>
                             </div>
-                        </button>
 
-                        <button
-                            type="button"
-                            onClick={() => setRole('instructor')}
-                            className={`p-4 rounded-lg border-2 transition-all ${role === 'instructor'
-                                    ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
-                                    : 'border-border hover:border-primary-300'
-                                }`}
-                        >
-                            <GraduationCap
-                                className={`w-8 h-8 mx-auto mb-2 ${role === 'instructor'
-                                        ? 'text-primary-600'
-                                        : 'text-muted-foreground'
-                                    }`}
-                            />
-                            <div className="text-sm font-medium text-foreground">Teach</div>
-                            <div className="text-xs text-muted-foreground">
-                                Create courses
-                            </div>
-                        </button>
-                    </div>
-                </div>
-
-                <Button type="submit" className="w-full" loading={loading}>
-                    Create Account
-                </Button>
-            </form>
-
-            <div className="mt-6 text-center text-sm text-muted-foreground">
-                Already have an account?{' '}
-                <Link
-                    href="/login"
-                    className="text-primary-600 hover:text-primary-700 font-medium"
-                >
-                    Sign in
-                </Link>
+                            <Button type="submit" className="w-full h-12 text-base shadow-tactile hover:shadow-lift hover:-translate-y-0.5 transition-all" loading={loading}>
+                                Create Account <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        </form>
+                    </CardContent>
+                    <CardFooter className="justify-center pb-8 pt-2">
+                        <div className="text-center text-sm text-muted-foreground">
+                            Already have an account?{' '}
+                            <Link
+                                href="/login"
+                                className="text-primary font-medium hover:underline underline-offset-4"
+                            >
+                                Sign in
+                            </Link>
+                        </div>
+                    </CardFooter>
+                </Card>
             </div>
         </div>
     )

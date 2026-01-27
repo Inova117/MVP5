@@ -1,20 +1,21 @@
 import type { Metadata } from 'next'
-import { Inter, Outfit } from 'next/font/google'
+import { Merriweather, DM_Sans } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { AuthProvider } from '@/components/providers/auth-provider'
 import { Toaster } from 'sonner'
 import { BackendFloatButton } from '@/components/backend-float-button'
 
-const inter = Inter({
+const merriweather = Merriweather({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['300', '400', '700', '900'],
+  variable: '--font-merriweather',
   display: 'swap',
 })
 
-const outfit = Outfit({
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-outfit',
+  variable: '--font-dm-sans',
   display: 'swap',
 })
 
@@ -31,7 +32,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${outfit.variable} font-sans`}>
+      <body className={`${merriweather.variable} ${dmSans.variable} font-sans bg-background text-foreground`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation'
 import { VideoPlayer } from '@/components/video/video-player'
 import { CurriculumSidebar } from '@/components/video/curriculum-sidebar'
 import { Button } from '@/components/ui/button'
-import { CheckCircle, ChevronRight } from 'lucide-react'
+import { CheckCircle, ChevronRight, CheckCircle2, Home } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import { Tag } from '@/components/ui/tag'
 
 // Mock course data - different content for each course
 const MOCK_COURSES: Record<string, any> = {
@@ -299,8 +300,8 @@ export default function CourseWatchPage({
         return (
             <div className="min-h-screen flex items-center justify-center bg-background">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold text-foreground mb-2">Course not found</h1>
-                    <p className="text-muted-foreground mb-4">The course you're looking for doesn't exist.</p>
+                    <h1 className="text-3xl font-serif font-bold text-foreground mb-3">Course not found</h1>
+                    <p className="text-muted-foreground mb-6 font-sans">The course you're looking for doesn't exist.</p>
                     <Link href="/courses">
                         <Button>Browse Courses</Button>
                     </Link>
@@ -353,82 +354,110 @@ export default function CourseWatchPage({
     }
 
     return (
-        <div className="h-screen flex flex-col bg-background">
+        <div className="h-screen flex flex-col bg-background overflow-hidden">
             {/* Top Bar */}
-            <div className="border-b border-border p-4">
-                <h1 className="text-xl font-semibold text-foreground">
-                    {MOCK_COURSE.title}
-                </h1>
+            <div className="border-b border-border p-4 bg-card/80 backdrop-blur-md z-20 flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-4">
+                    <Link href="/dashboard">
+                        <Button variant="ghost" size="icon" className="rounded-full hover:bg-muted text-muted-foreground hover:text-foreground">
+                            <Home className="w-5 h-5" />
+                        </Button>
+                    </Link>
+                    <div>
+                        <h1 className="text-lg font-serif font-bold text-foreground line-clamp-1">
+                            {MOCK_COURSE.title}
+                        </h1>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <Tag className="hidden md:inline-flex">{currentLesson.type === 'video' ? 'Video Lesson' : 'Quiz'}</Tag>
+                </div>
             </div>
 
             {/* Main Content */}
             <div className="flex-1 flex overflow-hidden">
-                {/* Video Section */}
-                <div className="flex-1 flex flex-col p-6 overflow-y-auto">
-                    {/* Content Section */}
-                    <div className="mb-6">
-                        {currentLesson.type === 'video' ? (
-                            <VideoPlayer
-                                src={(currentLesson as any).videoUrl}
-                                poster={(currentLesson as any).posterUrl}
-                                onProgress={handleProgress}
-                                onComplete={handleVideoComplete}
-                            />
-                        ) : currentLesson.type === 'quiz' ? (
-                            <div className="bg-background border border-border rounded-xl p-8 text-center py-16">
-                                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 mb-4">
-                                    <CheckCircle className="w-8 h-8" />
+                {/* Video/Content Section */}
+                <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar">
+                    <div className="p-6 md:p-10 max-w-5xl mx-auto w-full">
+                        {/* Content Container */}
+                        <div className="mb-8">
+                            {currentLesson.type === 'video' ? (
+                                <div className="space-y-6">
+                                    <VideoPlayer
+                                        src={(currentLesson as any).videoUrl}
+                                        poster={(currentLesson as any).posterUrl}
+                                        onProgress={handleProgress}
+                                        onComplete={handleVideoComplete}
+                                    />
+                                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                                        <div>
+                                            <h2 className="text-3xl font-serif font-bold text-foreground mb-2">
+                                                {currentLesson.title}
+                                            </h2>
+                                            <p className="text-muted-foreground font-sans text-lg">
+                                                Lesson {currentIndex + 1} of {allLessons.length}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex gap-3 shrink-0">
+                                            {!lessonCompleted ? (
+                                                <Button size="lg" onClick={handleMarkComplete} className="shadow-tactile hover:shadow-lift">
+                                                    <CheckCircle className="w-5 h-5 mr-2" />
+                                                    Mark Complete
+                                                </Button>
+                                            ) : (
+                                                <div className="flex items-center gap-2 text-primary font-medium px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
+                                                    <CheckCircle2 className="w-5 h-5" />
+                                                    <span>Completed</span>
+                                                </div>
+                                            )}
+
+                                            {nextLesson && (
+                                                <Button variant="outline" size="lg" onClick={handleNextLesson} className="bg-card">
+                                                    Next Lesson
+                                                    <ChevronRight className="w-5 h-5 ml-2" />
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-                                <h3 className="text-2xl font-bold text-foreground mb-2">Knowledge Check</h3>
-                                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                                    Test your knowledge of the concepts covered in this module.
-                                </p>
-                                <Button size="lg" onClick={() => toast.success('Quiz feature coming soon!')}>
-                                    Start Quiz
-                                </Button>
-                            </div>
-                        ) : (
-                            <div className="bg-muted rounded-xl p-12 text-center text-muted-foreground">
-                                Content not available
-                            </div>
-                        )}
-                    </div>
+                            ) : currentLesson.type === 'quiz' ? (
+                                <div className="bg-card border border-primary/10 rounded-2xl p-12 text-center py-24 shadow-tactile-lg">
+                                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-primary/5">
+                                        <CheckCircle2 className="w-10 h-10" />
+                                    </div>
+                                    <h3 className="text-3xl font-serif font-bold text-foreground mb-3">Knowledge Check</h3>
+                                    <p className="text-muted-foreground mb-8 max-w-md mx-auto text-lg leading-relaxed">
+                                        Test your knowledge of the concepts covered in this module. Ready to begin?
+                                    </p>
+                                    <Button size="lg" className="h-12 px-8 text-lg" onClick={() => toast.success('Quiz feature coming soon!', { description: "We're polishing this feature for you." })}>
+                                        Start Quiz
+                                    </Button>
+                                </div>
+                            ) : (
+                                <div className="bg-muted rounded-xl p-12 text-center text-muted-foreground">
+                                    Content not available
+                                </div>
+                            )}
+                        </div>
 
-                    {/* Lesson Info */}
-                    <div className="mb-6">
-                        <h2 className="text-2xl font-bold text-foreground mb-2">
-                            {currentLesson.title}
-                        </h2>
-                        <p className="text-muted-foreground">
-                            Lesson {currentIndex + 1} of {allLessons.length}
-                        </p>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex gap-4">
-                        {!lessonCompleted ? (
-                            <Button onClick={handleMarkComplete}>
-                                <CheckCircle className="w-5 h-5 mr-2" />
-                                Mark as Complete
-                            </Button>
-                        ) : (
-                            <div className="flex items-center gap-2 text-green-600">
-                                <CheckCircle className="w-5 h-5" />
-                                <span className="font-medium">Completed ✓</span>
-                            </div>
-                        )}
-
-                        {nextLesson && (
-                            <Button variant="outline" onClick={handleNextLesson}>
-                                Next Lesson
-                                <ChevronRight className="w-5 h-5 ml-2" />
-                            </Button>
-                        )}
+                        {/* Lesson Description/Resources (Placeholder) */}
+                        <div className="prose prose-stone dark:prose-invert max-w-none">
+                            <h3 className="font-serif">About this lesson</h3>
+                            <p>
+                                In this lesson, we dive deep into the core concepts. Make sure to download the attached resources and follow along with the exercises.
+                            </p>
+                            <ul>
+                                <li>Understanding the basics</li>
+                                <li>Applying best practices</li>
+                                <li>Common pitfalls to avoid</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
                 {/* Curriculum Sidebar */}
-                <div className="w-96 flex-shrink-0">
+                <div className="w-80 lg:w-96 flex-shrink-0 border-l border-border bg-card/30 backdrop-blur-sm hidden md:block">
                     <CurriculumSidebar
                         modules={MOCK_COURSE.modules}
                         currentLessonId={currentLessonId}

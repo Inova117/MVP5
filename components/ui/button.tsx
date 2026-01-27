@@ -3,25 +3,26 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-    'inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+    'inline-flex items-center justify-center gap-2 rounded-full text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
     {
         variants: {
             variant: {
                 primary:
-                    'bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-600 shadow-primary',
+                    'bg-primary text-primary-foreground shadow-tactile hover:shadow-lift hover:scale-[1.02] hover:-translate-y-0.5',
                 secondary:
-                    'bg-secondary-600 text-white hover:bg-secondary-700 focus-visible:ring-secondary-600 shadow-secondary',
+                    'bg-secondary text-secondary-foreground shadow-tactile-sm hover:bg-secondary/80 hover:shadow-tactile hover:-translate-y-0.5',
                 outline:
-                    'border-2 border-border bg-background hover:bg-muted focus-visible:ring-primary-600',
-                ghost: 'hover:bg-muted focus-visible:ring-primary-600',
+                    'border-2 border-primary/20 bg-background hover:bg-primary/5 hover:text-primary-700 hover:border-primary/50',
+                ghost: 'hover:bg-muted hover:text-foreground',
                 destructive:
-                    'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600',
+                    'bg-destructive text-destructive-foreground shadow-tactile hover:bg-destructive/90 hover:shadow-lift',
+                link: 'text-primary underline-offset-4 hover:underline',
             },
             size: {
-                sm: 'h-9 px-3 text-xs',
-                md: 'h-10 px-4',
-                lg: 'h-12 px-6 text-base',
-                icon: 'h-10 w-10',
+                sm: 'h-9 px-4 text-xs',
+                md: 'h-11 px-6',
+                lg: 'h-14 px-8 text-base',
+                icon: 'h-11 w-11',
             },
         },
         defaultVariants: {
