@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Activity, Users, Globe, Zap, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 
-// Simulated data generator
+// Simulated data generator (Client-side usage only to prevent hydration mismatch)
 const generateData = (count: number) => {
     return Array.from({ length: count }).map((_, i) => ({
         time: `${10 + i}:00`,
@@ -15,13 +15,20 @@ const generateData = (count: number) => {
 }
 
 export function OverviewModule() {
-    const [data, setData] = useState(generateData(20))
+    // Start with empty or static data to match server execution
+    const [data, setData] = useState<any[]>([])
     const [activeUsers, setActiveUsers] = useState(1243)
+    const [mounted, setMounted] = useState(false)
 
-    // Real-time effect
+    // Initial data load and real-time effect
     useEffect(() => {
+        setMounted(true)
+        setData(generateData(20))
+
         const interval = setInterval(() => {
             setData(prev => {
+                if (prev.length === 0) return generateData(20)
+
                 const next = [...prev.slice(1)]
                 const last = prev[prev.length - 1]
                 if (last) {
@@ -38,6 +45,14 @@ export function OverviewModule() {
         }, 2000)
         return () => clearInterval(interval)
     }, [])
+
+    if (!mounted) {
+        return (
+            <div className="flex items-center justify-center h-[500px]">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            </div>
+        )
+    }
 
     return (
         <div className="space-y-6">
@@ -144,11 +159,11 @@ function KPICard({ title, value, trend, trendUp, icon: Icon, color }: any) {
     return (
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-slate-700 transition-all">
             <div className="flex justify-between items-start mb-4">
-                <div className={`p - 2 rounded - lg bg - slate - 800 / 50 ${color} `}>
+                <div className={`p-2 rounded-lg bg-slate-800/50 ${color}`}>
                     <Icon className="w-5 h-5" />
                 </div>
-                <div className={`flex items - center gap - 1 text - xs font - medium px - 2 py - 1 rounded - full ${trendUp ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
-                    } `}>
+                <div className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${trendUp ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
+                    }`}>
                     {trendUp ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                     {trend}
                 </div>
@@ -169,7 +184,7 @@ function HealthItem({ name, status, latency }: any) {
     return (
         <div className="flex items-center justify-between p-3 rounded-lg bg-slate-950/50 border border-slate-800/50">
             <div className="flex items-center gap-3">
-                <div className={`w - 2 h - 2 rounded - full ${getStatusColor(status)} shadow - [0_0_8px_rgba(0, 0, 0, 0.5)]`} />
+                <div className={`w-2 h-2 rounded-full ${getStatusColor(status)} shadow-[0_0_8px_rgba(0,0,0,0.5)]`} />
                 <span className="text-sm font-medium text-slate-300">{name}</span>
             </div>
             <span className="font-mono text-xs text-slate-500">{latency}</span>
