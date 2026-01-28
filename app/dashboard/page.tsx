@@ -19,7 +19,7 @@ const MOCK_ENROLLED_COURSES = [
     {
         id: '1',
         title: 'Complete Web Development Bootcamp 2024',
-        thumbnail_url: '/api/images/web-dev',
+        thumbnail_url: '/images/courses/web-dev.png',
         progress: 35,
         lastLesson: 'JavaScript Fundamentals - Variables',
         lastLessonId: 'lesson-5',
@@ -29,7 +29,7 @@ const MOCK_ENROLLED_COURSES = [
     {
         id: '2',
         title: 'Data Science Fundamentals',
-        thumbnail_url: '/api/images/data-science',
+        thumbnail_url: '/images/courses/data-science.png',
         progress: 60,
         lastLesson: 'Introduction to ML',
         lastLessonId: 'lesson-5',
@@ -39,7 +39,7 @@ const MOCK_ENROLLED_COURSES = [
     {
         id: '3',
         title: 'UI/UX Design Masterclass',
-        thumbnail_url: '/api/images/ui-ux',
+        thumbnail_url: '/images/courses/ui-ux.png',
         progress: 100,
         lastLesson: 'Design Thinking Quiz',
         lastLessonId: 'lesson-quiz-1',
