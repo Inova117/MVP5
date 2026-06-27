@@ -76,11 +76,11 @@ export function CurriculumSidebar({
 
             <div className="p-4 space-y-4">
                 {modules.map((module) => (
-                    <div key={module.id} className="rounded-xl overflow-hidden bg-white/50 border border-primary/5 transition-all duration-300 hover:shadow-tactile-sm">
+                    <div key={module.id} className="rounded-xl overflow-hidden bg-card border border-primary/5 transition-all duration-300 hover:shadow-tactile-sm">
                         {/* Module Header */}
                         <button
                             onClick={() => toggleModule(module.id)}
-                            className="w-full px-4 py-3 flex items-center justify-between hover:bg-white/80 transition-colors text-left group"
+                            className="w-full px-4 py-3 flex items-center justify-between hover:bg-muted/60 transition-colors text-left group"
                         >
                             <span className="font-serif font-semibold text-foreground text-sm">
                                 {module.title}

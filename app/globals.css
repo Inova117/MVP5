@@ -78,17 +78,61 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    /* Subtle warm "paper" texture so the cream background reads as a surface, not flat fill */
+    background-image:
+      radial-gradient(circle at 15% 0%, hsl(var(--primary) / 0.04), transparent 45%),
+      radial-gradient(circle at 100% 10%, hsl(var(--accent) / 0.35), transparent 40%);
+    background-attachment: fixed;
   }
-  
+
   /* Typography enhancements */
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif tracking-tight;
   }
+
+  /* Consistent, on-brand text selection */
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+
+  /* Visible, on-brand focus ring for keyboard users everywhere */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
 }
 
-/* Custom Scrollbar for Tactile Feel */
+@layer components {
+  /* Slim, themed scrollbar used by scroll containers (watch page, sidebars) */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.25) transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full transition-colors;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/40;
+  }
+
+  /* Section heading eyebrow used across landing + dashboards for rhythm */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary;
+  }
+}
+
+/* Global page scrollbar for Tactile Feel */
 ::-webkit-scrollbar {
   width: 10px;
 }

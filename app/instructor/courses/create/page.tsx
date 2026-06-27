@@ -111,10 +111,10 @@ export default function CourseCreatePage() {
                             {[1, 2, 3].map((s) => (
                                 <div
                                     key={s}
-                                    className={`flex items-center justify-center w-8 h-8 rounded-full ${step === s
-                                        ? 'bg-primary-600 text-white'
+                                    className={`flex items-center justify-center w-8 h-8 rounded-full font-medium transition-colors ${step === s
+                                        ? 'bg-primary text-primary-foreground'
                                         : step > s
-                                            ? 'bg-green-500 text-white'
+                                            ? 'bg-emerald-500 text-white'
                                             : 'bg-muted text-muted-foreground'
                                         }`}
                                 >
@@ -144,7 +144,7 @@ export default function CourseCreatePage() {
                                         value={title}
                                         onChange={(e) => setTitle(e.target.value)}
                                         placeholder="e.g., Complete Web Development Bootcamp"
-                                        className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary-600"
+                                        className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                                     />
                                 </div>
 
@@ -157,7 +157,7 @@ export default function CourseCreatePage() {
                                         onChange={(e) => setDescription(e.target.value)}
                                         rows={4}
                                         placeholder="Describe what students will learn..."
-                                        className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary-600"
+                                        className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                                     />
                                 </div>
 
@@ -169,7 +169,7 @@ export default function CourseCreatePage() {
                                         <select
                                             value={category}
                                             onChange={(e) => setCategory(e.target.value)}
-                                            className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary-600"
+                                            className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                                         >
                                             <option>Technology</option>
                                             <option>Design</option>
@@ -187,7 +187,7 @@ export default function CourseCreatePage() {
                                             step="0.01"
                                             value={price}
                                             onChange={(e) => setPrice(e.target.value)}
-                                            className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary-600"
+                                            className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                                         />
                                     </div>
                                 </div>
@@ -234,7 +234,7 @@ export default function CourseCreatePage() {
                                 {modules.map((module) => (
                                     <div
                                         key={module.id}
-                                        className="bg-background border border-border rounded-lg overflow-hidden"
+                                        className="bg-card border border-border rounded-xl overflow-hidden shadow-tactile-sm"
                                     >
                                         {/* Module Header */}
                                         <div className="bg-muted p-4 flex items-center gap-3">
@@ -336,7 +336,7 @@ export default function CourseCreatePage() {
                             Review & Publish
                         </h2>
 
-                        <div className="bg-background border border-border rounded-lg p-6 space-y-4">
+                        <div className="bg-card border border-border rounded-xl p-6 space-y-4 shadow-tactile-sm">
                             <div>
                                 <h3 className="font-semibold text-foreground text-lg mb-1">
                                     {title}

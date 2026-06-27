@@ -3,6 +3,7 @@ import { Merriweather, DM_Sans } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { AuthProvider } from '@/components/providers/auth-provider'
+import { ProgressProvider } from '@/components/providers/progress-provider'
 import { Toaster } from 'sonner'
 import { BackendFloatButton } from '@/components/backend-float-button'
 
@@ -20,9 +21,12 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'E-Learning Platform - Learn at Your Own Pace',
+  title: {
+    default: 'Tactile Academy — Learn at Your Own Pace',
+    template: '%s · Tactile Academy',
+  },
   description:
-    'Premium online courses with video streaming, progress tracking, and certificates',
+    'Premium online courses with HD video, real progress tracking, and certificates. A calm, focused place to master your craft.',
 }
 
 export default function RootLayout({
@@ -40,9 +44,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            {children}
-            <Toaster position="top-center" richColors />
-            <BackendFloatButton />
+            <ProgressProvider>
+              {children}
+              <Toaster position="top-center" richColors />
+              <BackendFloatButton />
+            </ProgressProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

@@ -33,8 +33,8 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-4">
-            <div className="w-full max-w-md">
+        <div className="mx-auto w-full max-w-md">
+            <div>
                 <div className="flex flex-col items-center mb-8">
                     <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-primary-foreground mb-4 shadow-tactile">
                         <Video className="w-6 h-6" />

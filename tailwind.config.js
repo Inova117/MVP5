@@ -37,6 +37,17 @@ module.exports = {
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
+          // Warm Sand / Clay — complements the Sage primary
+          50: '#FAF8F4',
+          100: '#F3ECE2',
+          200: '#E7DAC8',
+          300: '#D7C3A6',
+          400: '#C2A77F',
+          500: '#AD8E5F',
+          600: '#92744B',
+          700: '#735A3A',
+          800: '#54422C',
+          900: '#382C1E',
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',

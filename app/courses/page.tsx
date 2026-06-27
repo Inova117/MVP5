@@ -2,169 +2,151 @@
 
 import { useState, useMemo } from 'react'
 import { CourseCard } from '@/components/courses/course-card'
+import { Navbar } from '@/components/navbar'
+import { SiteFooter } from '@/components/site-footer'
 import { Button } from '@/components/ui/button'
-import { Search } from 'lucide-react'
+import { Search, SlidersHorizontal, X } from 'lucide-react'
+import { getPublishedCourses, CATEGORIES, type Level } from '@/lib/mock-data'
 
-// Mock data - will be replaced with Supabase query
-const MOCK_COURSES = [
-    {
-        id: '1',
-        instructor_id: 'instructor-1',
-        title: 'Complete Web Development Bootcamp 2024',
-        description: 'Learn HTML, CSS, JavaScript, React, and Node.js from scratch',
-        category: 'Technology',
-        price: 99.99,
-        thumbnail_url: '/api/images/web-dev',
-        status: 'published' as const,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        instructor: {
-            id: 'instructor-1',
-            role: 'instructor' as const,
-            full_name: 'Dr. Sarah Johnson',
-            avatar_url: null,
-            bio: 'Expert in web development',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-        },
-    },
-    {
-        id: '2',
-        instructor_id: 'instructor-2',
-        title: 'Data Science Fundamentals with Python',
-        description: 'Master Python, pandas, and machine learning basics',
-        category: 'Technology',
-        price: 149.99,
-        thumbnail_url: '/api/images/data-science',
-        status: 'published' as const,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        instructor: {
-            id: 'instructor-2',
-            role: 'instructor' as const,
-            full_name: 'Prof. Michael Chen',
-            avatar_url: null,
-            bio: 'Data Science researcher',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-        },
-    },
-    {
-        id: '3',
-        instructor_id: 'instructor-1',
-        title: 'UI/UX Design Masterclass',
-        description: 'Learn Figma, design principles, and create stunning interfaces',
-        category: 'Design',
-        price: 79.99,
-        thumbnail_url: '/api/images/ui-ux',
-        status: 'published' as const,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        instructor: {
-            id: 'instructor-1',
-            role: 'instructor' as const,
-            full_name: 'Dr. Sarah Johnson',
-            avatar_url: null,
-            bio: 'Expert in web development',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-        },
-    },
-]
-
-const CATEGORIES = ['All', 'Technology', 'Design', 'Business', 'Marketing']
+const LEVELS: (Level | 'All')[] = ['All', 'Beginner', 'Intermediate', 'Advanced']
+const ALL_COURSES = getPublishedCourses()
 
 export default function CoursesPage() {
-    const [searchQuery, setSearchQuery] = useState('')
-    const [selectedCategory, setSelectedCategory] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string>('All')
+  const [selectedLevel, setSelectedLevel] = useState<string>('All')
 
-    // Filter courses based on search and category
-    const filteredCourses = useMemo(() => {
-        return MOCK_COURSES.filter((course) => {
-            const matchesSearch =
-                course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                course.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCourses = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase()
+    return ALL_COURSES.filter((course) => {
+      const matchesSearch =
+        !q ||
+        course.title.toLowerCase().includes(q) ||
+        course.description.toLowerCase().includes(q) ||
+        course.instructor.full_name.toLowerCase().includes(q)
+      const matchesCategory =
+        selectedCategory === 'All' || course.category === selectedCategory
+      const matchesLevel =
+        selectedLevel === 'All' || course.level === selectedLevel
+      return matchesSearch && matchesCategory && matchesLevel
+    })
+  }, [searchQuery, selectedCategory, selectedLevel])
 
-            const matchesCategory =
-                selectedCategory === 'All' || course.category === selectedCategory
+  const hasFilters =
+    !!searchQuery || selectedCategory !== 'All' || selectedLevel !== 'All'
 
-            return matchesSearch && matchesCategory
-        })
-    }, [searchQuery, selectedCategory])
+  const clearFilters = () => {
+    setSearchQuery('')
+    setSelectedCategory('All')
+    setSelectedLevel('All')
+  }
 
-    return (
-        <div className="min-h-screen bg-background">
-            <div className="container mx-auto px-4 py-8">
-                {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-4xl font-display font-bold text-foreground mb-2">
-                        Explore Courses
-                    </h1>
-                    <p className="text-lg text-muted-foreground">
-                        Discover your next learning adventure
-                    </p>
-                </div>
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
 
-                {/* Search and Filters */}
-                <div className="mb-8 flex flex-col md:flex-row gap-4">
-                    {/* Search Bar */}
-                    <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                        <input
-                            type="text"
-                            placeholder="Search courses..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary-600"
-                        />
-                    </div>
-
-                    {/* Category Filter */}
-                    <div className="flex gap-2 overflow-x-auto">
-                        {CATEGORIES.map((category) => (
-                            <Button
-                                key={category}
-                                variant={selectedCategory === category ? 'primary' : 'outline'}
-                                size="md"
-                                onClick={() => setSelectedCategory(category)}
-                                className="whitespace-nowrap"
-                            >
-                                {category}
-                            </Button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Results Count */}
-                <div className="mb-6 text-sm text-muted-foreground">
-                    {filteredCourses.length} course{filteredCourses.length !== 1 && 's'}{' '}
-                    found
-                </div>
-
-                {/* Course Grid */}
-                {filteredCourses.length > 0 ? (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredCourses.map((course) => (
-                            <CourseCard key={course.id} course={course} />
-                        ))}
-                    </div>
-                ) : (
-                    <div className="text-center py-16">
-                        <p className="text-lg text-muted-foreground mb-4">
-                            No courses found matching your criteria
-                        </p>
-                        <Button
-                            variant="outline"
-                            onClick={() => {
-                                setSearchQuery('')
-                                setSelectedCategory('All')
-                            }}
-                        >
-                            Clear Filters
-                        </Button>
-                    </div>
-                )}
-            </div>
+      {/* Page header */}
+      <div className="border-b border-border bg-card/40">
+        <div className="container mx-auto px-4 py-12">
+          <span className="eyebrow mb-3">Course catalog</span>
+          <h1 className="font-serif text-4xl font-bold tracking-tight text-foreground">
+            Explore courses
+          </h1>
+          <p className="mt-2 max-w-xl text-lg text-muted-foreground">
+            Discover your next learning adventure across technology, design,
+            business and marketing.
+          </p>
         </div>
-    )
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Search + category chips */}
+        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search courses or instructors..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-12 w-full rounded-full border border-border bg-card pl-12 pr-4 text-foreground shadow-tactile-sm transition-all placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {CATEGORIES.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  selectedCategory === category
+                    ? 'bg-primary text-primary-foreground shadow-tactile-sm'
+                    : 'border border-border bg-card text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Level filter + results count */}
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium text-muted-foreground">Level:</span>
+            {LEVELS.map((level) => (
+              <button
+                key={level}
+                onClick={() => setSelectedLevel(level)}
+                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                  selectedLevel === level
+                    ? 'bg-secondary text-secondary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {level}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <span>
+              {filteredCourses.length} course
+              {filteredCourses.length !== 1 && 's'}
+            </span>
+            {hasFilters && (
+              <button
+                onClick={clearFilters}
+                className="flex items-center gap-1 font-medium text-primary hover:underline"
+              >
+                <X className="h-3.5 w-3.5" />
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Grid */}
+        {filteredCourses.length > 0 ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filteredCourses.map((course) => (
+              <CourseCard key={course.id} course={course} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-border bg-card/50 py-20 text-center">
+            <p className="mb-4 text-lg text-muted-foreground">
+              No courses match your filters yet.
+            </p>
+            <Button variant="outline" onClick={clearFilters}>
+              Clear filters
+            </Button>
+          </div>
+        )}
+      </div>
+
+      <SiteFooter />
+    </div>
+  )
 }
